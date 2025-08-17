@@ -1,0 +1,68 @@
+# Configuration Spring Boot
+spring:
+  application:
+    name: echeancier
+
+  # Configuration base de données H2
+  datasource:
+    url: jdbc:h2:mem:echeancier
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+
+  # Configuration JPA/Hibernate
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  # Console H2 (pour développement)
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        trace: false
+        web-allow-others: false
+
+# Configuration serveur
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+# Configuration CORS pour Vue.js
+cors:
+  allowed-origins:
+    - http://localhost:5173
+    - http://localhost:3000
+  allowed-methods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+    - OPTIONS
+  allowed-headers: "*"
+  allow-credentials: true
+
+# Configuration logging
+logging:
+  level:
+    com.yoann.echeancier: DEBUG
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+# Configuration Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
