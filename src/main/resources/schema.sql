@@ -2,12 +2,9 @@
 
 CREATE TABLE utilisateurs (
                               id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                              nom_utilisateur VARCHAR(50) UNIQUE NOT NULL,
+                              nom_utilisateur VARCHAR(50) NOT NULL UNIQUE,
                               email VARCHAR(100) UNIQUE NOT NULL,
-                              mot_de_passe VARCHAR(255) NOT NULL,
-                              nom VARCHAR(50) NOT NULL,
-                              prenom VARCHAR(50) NOT NULL,
-                              date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                              mot_de_passe VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE depenses (

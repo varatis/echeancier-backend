@@ -18,7 +18,7 @@ public class UtilisateurService {
 
     private final BCryptPasswordEncoder encodeurMotDePasse = new BCryptPasswordEncoder();
 
-    public Utilisateur creerUtilisateur(String nomUtilisateur, String email, String motDePasse, String nom, String prenom) {
+    public Utilisateur creerUtilisateur(String nomUtilisateur, String email, String motDePasse) {
         // Vérifier si l'email existe déjà
         if (utilisateurRepository.existsByEmail(email)) {
             throw new RuntimeException("Un compte avec cet email existe déjà");
@@ -34,9 +34,6 @@ public class UtilisateurService {
         utilisateur.setNomUtilisateur(nomUtilisateur);
         utilisateur.setEmail(email);
         utilisateur.setMotDePasse(encodeurMotDePasse.encode(motDePasse));
-        utilisateur.setNom(nom);
-        utilisateur.setPrenom(prenom);
-        utilisateur.setDateCreation(LocalDateTime.now());
 
         return utilisateurRepository.save(utilisateur);
     }

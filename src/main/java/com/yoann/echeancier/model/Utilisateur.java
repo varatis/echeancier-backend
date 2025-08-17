@@ -24,28 +24,16 @@ public class Utilisateur {
     @Column(nullable = false)
     private String motDePasse;
 
-    @Column(nullable = false, length = 50)
-    private String nom;
-
-    @Column(nullable = false, length = 50)
-    private String prenom;
-
-    @Column(name = "date_creation")
-    private LocalDateTime dateCreation;
-
     @OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Depense> depenses;
 
     // Constructeurs
     public Utilisateur() {}
 
-    public Utilisateur(String nomUtilisateur, String email, String motDePasse, String nom, String prenom) {
+    public Utilisateur(String nomUtilisateur, String email, String motDePasse) {
         this.nomUtilisateur = nomUtilisateur;
         this.email = email;
         this.motDePasse = motDePasse;
-        this.nom = nom;
-        this.prenom = prenom;
-        this.dateCreation = LocalDateTime.now();
     }
 
     // Getters et Setters
@@ -60,15 +48,6 @@ public class Utilisateur {
 
     public String getMotDePasse() { return motDePasse; }
     public void setMotDePasse(String motDePasse) { this.motDePasse = motDePasse; }
-
-    public String getNom() { return nom; }
-    public void setNom(String nom) { this.nom = nom; }
-
-    public String getPrenom() { return prenom; }
-    public void setPrenom(String prenom) { this.prenom = prenom; }
-
-    public LocalDateTime getDateCreation() { return dateCreation; }
-    public void setDateCreation(LocalDateTime dateCreation) { this.dateCreation = dateCreation; }
 
     public List<Depense> getDepenses() { return depenses; }
     public void setDepenses(List<Depense> depenses) { this.depenses = depenses; }

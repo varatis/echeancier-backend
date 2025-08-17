@@ -1,10 +1,10 @@
 -- Données de test pour l'application Échéancier
 
 -- Insertion d'utilisateurs de test
-INSERT INTO UTILISATEURS (nom_utilisateur, email, mot_de_passe, nom, prenom, date_creation)
+INSERT INTO UTILISATEURS (nom_utilisateur, email, mot_de_passe)
 VALUES
-    ('yoann123', 'yoann@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Dupont', 'Yoann', CURRENT_TIMESTAMP),
-    ('marie456', 'marie@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Martin', 'Marie', CURRENT_TIMESTAMP);
+    ('yoann123', 'yoann@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy'),
+    ('marie456', 'marie@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy');
 
 -- Insertion de dépenses de test
 INSERT INTO DEPENSES (description, montant, categorie, date_depense, commentaires, utilisateur_id, date_creation)

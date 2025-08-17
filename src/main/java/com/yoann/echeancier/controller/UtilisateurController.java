@@ -37,18 +37,14 @@ public class UtilisateurController {
             String nomUtilisateur = inscription.get("nomUtilisateur");
             String email = inscription.get("email");
             String motDePasse = inscription.get("motDePasse");
-            String nom = inscription.get("nom");
-            String prenom = inscription.get("prenom");
 
-            Utilisateur utilisateur = utilisateurService.creerUtilisateur(nomUtilisateur, email, motDePasse, nom, prenom);
+            Utilisateur utilisateur = utilisateurService.creerUtilisateur(nomUtilisateur, email, motDePasse);
 
             // Réponse sans le mot de passe
             Map<String, Object> reponse = Map.of(
                     "id", utilisateur.getId(),
                     "nomUtilisateur", utilisateur.getNomUtilisateur(),
-                    "email", utilisateur.getEmail(),
-                    "nom", utilisateur.getNom(),
-                    "prenom", utilisateur.getPrenom()
+                    "email", utilisateur.getEmail()
             );
 
             return ResponseEntity.status(HttpStatus.CREATED)
@@ -94,9 +90,7 @@ public class UtilisateurController {
             Map<String, Object> reponse = Map.of(
                     "id", utilisateur.getId(),
                     "nomUtilisateur", utilisateur.getNomUtilisateur(),
-                    "email", utilisateur.getEmail(),
-                    "nom", utilisateur.getNom(),
-                    "prenom", utilisateur.getPrenom()
+                    "email", utilisateur.getEmail()
             );
 
             return ResponseEntity.ok(reponse);
