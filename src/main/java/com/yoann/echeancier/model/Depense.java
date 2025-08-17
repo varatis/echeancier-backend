@@ -1,7 +1,6 @@
 package com.yoann.echeancier.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,112 +16,62 @@ public class Depense {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private String description;
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal montant;
+
+    @Column(nullable = false, length = 50)
+    private String categorie;
+
+    @Column(name = "date_depense", nullable = false)
+    private LocalDate dateDepense;
+
+    @Column(columnDefinition = "TEXT")
+    private String commentaires;
+
+    @Column(name = "date_creation")
+    private LocalDateTime dateCreation;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "utilisateur_id", nullable = false)
     private Utilisateur utilisateur;
 
-    @Column(name = "montant", nullable = false, precision = 10, scale = 2)
-    @NotNull(message = "Le montant ne peut pas être null")
-    @DecimalMin(value = "0.01", message = "Le montant doit être supérieur à 0")
-    @Digits(integer = 8, fraction = 2, message = "Le montant ne peut avoir plus de 2 décimales")
-    private BigDecimal montant;
-
-    @Column(name = "description", nullable = false, length = 255)
-    @NotBlank(message = "La description ne peut pas être vide")
-    @Size(max = 255, message = "La description ne peut pas dépasser 255 caractères")
-    private String description;
-
-    @Column(name = "date_depense", nullable = false)
-    @NotNull(message = "La date de dépense ne peut pas être null")
-    private LocalDate dateDepense;
-
-    @Column(name = "date_creation", nullable = false)
-    private LocalDateTime dateCreation;
-
-    @Column(name = "date_modification")
-    private LocalDateTime dateModification;
-
     // Constructeurs
-    public Depense() {
+    public Depense() {}
+
+    public Depense(String description, BigDecimal montant, String categorie, LocalDate dateDepense, Utilisateur utilisateur) {
+        this.description = description;
+        this.montant = montant;
+        this.categorie = categorie;
+        this.dateDepense = dateDepense;
+        this.utilisateur = utilisateur;
         this.dateCreation = LocalDateTime.now();
     }
 
-    public Depense(Utilisateur utilisateur, BigDecimal montant, String description, LocalDate dateDepense) {
-        this();
-        this.utilisateur = utilisateur;
-        this.montant = montant;
-        this.description = description;
-        this.dateDepense = dateDepense;
-    }
-
     // Getters et Setters
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-    public Utilisateur getUtilisateur() {
-        return utilisateur;
-    }
+    public BigDecimal getMontant() { return montant; }
+    public void setMontant(BigDecimal montant) { this.montant = montant; }
 
-    public void setUtilisateur(Utilisateur utilisateur) {
-        this.utilisateur = utilisateur;
-    }
+    public String getCategorie() { return categorie; }
+    public void setCategorie(String categorie) { this.categorie = categorie; }
 
-    public BigDecimal getMontant() {
-        return montant;
-    }
+    public LocalDate getDateDepense() { return dateDepense; }
+    public void setDateDepense(LocalDate dateDepense) { this.dateDepense = dateDepense; }
 
-    public void setMontant(BigDecimal montant) {
-        this.montant = montant;
-        this.dateModification = LocalDateTime.now();
-    }
+    public String getCommentaires() { return commentaires; }
+    public void setCommentaires(String commentaires) { this.commentaires = commentaires; }
 
-    public String getDescription() {
-        return description;
-    }
+    public LocalDateTime getDateCreation() { return dateCreation; }
+    public void setDateCreation(LocalDateTime dateCreation) { this.dateCreation = dateCreation; }
 
-    public void setDescription(String description) {
-        this.description = description;
-        this.dateModification = LocalDateTime.now();
-    }
-
-    public LocalDate getDateDepense() {
-        return dateDepense;
-    }
-
-    public void setDateDepense(LocalDate dateDepense) {
-        this.dateDepense = dateDepense;
-        this.dateModification = LocalDateTime.now();
-    }
-
-    public LocalDateTime getDateCreation() {
-        return dateCreation;
-    }
-
-    public void setDateCreation(LocalDateTime dateCreation) {
-        this.dateCreation = dateCreation;
-    }
-
-    public LocalDateTime getDateModification() {
-        return dateModification;
-    }
-
-    public void setDateModification(LocalDateTime dateModification) {
-        this.dateModification = dateModification;
-    }
-
-    @Override
-    public String toString() {
-        return "Depense{" +
-                "id=" + id +
-                ", montant=" + montant +
-                ", description='" + description + '\'' +
-                ", dateDepense=" + dateDepense +
-                ", dateCreation=" + dateCreation +
-                '}';
-    }
+    public Utilisateur getUtilisateur() { return utilisateur; }
+    public void setUtilisateur(Utilisateur utilisateur) { this.utilisateur = utilisateur; }
 }
