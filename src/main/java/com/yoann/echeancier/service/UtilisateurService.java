@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -62,5 +63,9 @@ public class UtilisateurService {
     public Utilisateur obtenirUtilisateurParEmail(String email) {
         return utilisateurRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+    }
+
+    public List<Utilisateur> obtenirTousLesUtilisateurs() {
+        return utilisateurRepository.findAll();
     }
 }

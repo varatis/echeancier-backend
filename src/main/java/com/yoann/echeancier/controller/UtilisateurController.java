@@ -13,13 +13,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/utilisateurs")
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8080", "http://localhost:4200"}, allowCredentials = "true") // ✅ Correct
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8080", "http://localhost:4200"}, allowCredentials = "true")
 public class UtilisateurController {
-
 
     @Autowired
     private UtilisateurService utilisateurService;
@@ -29,7 +30,6 @@ public class UtilisateurController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
-
 
     @PostMapping("/inscription")
     public ResponseEntity<?> inscrire(@Valid @RequestBody Map<String, String> inscription) {
@@ -65,14 +65,25 @@ public class UtilisateurController {
                     new UsernamePasswordAuthenticationToken(creds.get("email"), creds.get("motDePasse"))
             );
             System.out.println("Authentification réussie !");
-            // La connexion est réussie. Générez et retournez le token.
-            // Utilisez la classe que nous avons créée précédemment pour générer le token JWT.
+
+            // Générer et retourner le token.
             String token = jwtTokenProvider.generateToken(authentication.getName());
 
+            // Récupérer les informations de l'utilisateur en utilisant la bonne méthode du service.
+            // La méthode obtenirUtilisateurParEmail lève une exception si l'utilisateur n'est pas trouvé.
+            Utilisateur utilisateur = utilisateurService.obtenirUtilisateurParEmail(creds.get("email"));
+
+            // Créer l'objet utilisateur à retourner (sans le mot de passe)
+            Map<String, Object> userResponse = new HashMap<>();
+            userResponse.put("id", utilisateur.getId());
+            userResponse.put("nomUtilisateur", utilisateur.getNomUtilisateur());
+            userResponse.put("email", utilisateur.getEmail());
+
+            // Construire la réponse finale
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Connexion réussie");
             response.put("token", token);
-            // Vous pouvez aussi retourner les infos de l'utilisateur si vous le souhaitez
+            response.put("user", userResponse); // Ajout de l'objet utilisateur
 
             return ResponseEntity.ok(response);
 
@@ -80,7 +91,6 @@ public class UtilisateurController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Email ou mot de passe incorrect."));
         }
     }
-
     @GetMapping("/{id}")
     public ResponseEntity<?> obtenirUtilisateur(@PathVariable Long id) {
         try {
@@ -101,4 +111,23 @@ public class UtilisateurController {
                     .body(Map.of("erreur", "Erreur lors de la récupération de l'utilisateur"));
         }
     }
+
+    @GetMapping
+    public ResponseEntity<List<Map<String, Object>>> obtenirTousLesUtilisateurs() {
+        List<Utilisateur> utilisateurs = utilisateurService.obtenirTousLesUtilisateurs();
+
+        // Convertir la liste d'utilisateurs en une liste de Maps pour cacher les mots de passe
+        List<Map<String, Object>> reponse = utilisateurs.stream()
+                .map(utilisateur -> {
+                    Map<String, Object> userMap = new HashMap<>();
+                    userMap.put("id", utilisateur.getId());
+                    userMap.put("nomUtilisateur", utilisateur.getNomUtilisateur());
+                    userMap.put("email", utilisateur.getEmail());
+                    return userMap;
+                })
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(reponse);
+    }
+
 }
