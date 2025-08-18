@@ -4,11 +4,17 @@ package com.yoann.echeancier.dto;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
+@Getter
+@Setter
 public class DepenseDto {
+    // Getters et Setters
     private Long id;
 
     @NotBlank(message = "La description est obligatoire")
@@ -26,7 +32,10 @@ public class DepenseDto {
 
     private String commentaires;
 
+    // Ajout de l'utilisateurId
     private Long utilisateurId;
+
+    private LocalDateTime dateCreation;
 
     // Constructeurs
     public DepenseDto() {}
@@ -38,25 +47,4 @@ public class DepenseDto {
         this.dateDepense = dateDepense;
     }
 
-    // Getters et Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-
-    public BigDecimal getMontant() { return montant; }
-    public void setMontant(BigDecimal montant) { this.montant = montant; }
-
-    public String getCategorie() { return categorie; }
-    public void setCategorie(String categorie) { this.categorie = categorie; }
-
-    public LocalDate getDateDepense() { return dateDepense; }
-    public void setDateDepense(LocalDate dateDepense) { this.dateDepense = dateDepense; }
-
-    public String getCommentaires() { return commentaires; }
-    public void setCommentaires(String commentaires) { this.commentaires = commentaires; }
-
-    public Long getUtilisateurId() { return utilisateurId; }
-    public void setUtilisateurId(Long utilisateurId) { this.utilisateurId = utilisateurId; }
 }

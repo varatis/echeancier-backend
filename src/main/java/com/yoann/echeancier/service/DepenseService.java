@@ -113,6 +113,9 @@ public class DepenseService {
         dto.setMontant(depense.getMontant());
         dto.setCategorie(depense.getCategorie());
         dto.setDateDepense(depense.getDateDepense());
+        dto.setCommentaires(depense.getCommentaires());
+        dto.setDateCreation(depense.getDateCreation());
+        dto.setUtilisateurId(depense.getUtilisateur().getId());
         return dto;
     }
 }
