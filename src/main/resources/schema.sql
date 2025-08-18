@@ -11,7 +11,6 @@ CREATE TABLE depenses (
                           id BIGINT AUTO_INCREMENT PRIMARY KEY,
                           description VARCHAR(255) NOT NULL,
                           montant DECIMAL(10,2) NOT NULL,
-                          categorie VARCHAR(50) NOT NULL,
                           date_depense DATE NOT NULL,
                           commentaires TEXT,
                           utilisateur_id BIGINT NOT NULL,

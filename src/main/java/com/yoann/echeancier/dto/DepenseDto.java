@@ -24,9 +24,6 @@ public class DepenseDto {
     @DecimalMin(value = "0.01", message = "Le montant doit être supérieur à 0")
     private BigDecimal montant;
 
-    @NotBlank(message = "La catégorie est obligatoire")
-    private String categorie;
-
     @NotNull(message = "La date de dépense est obligatoire")
     private LocalDate dateDepense;
 
@@ -43,7 +40,6 @@ public class DepenseDto {
     public DepenseDto(String description, BigDecimal montant, String categorie, LocalDate dateDepense) {
         this.description = description;
         this.montant = montant;
-        this.categorie = categorie;
         this.dateDepense = dateDepense;
     }
 

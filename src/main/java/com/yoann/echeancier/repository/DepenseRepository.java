@@ -23,9 +23,6 @@ public interface DepenseRepository extends JpaRepository<Depense, Long> {
             LocalDate dateFin
     );
 
-    // Trouve les dépenses d'un utilisateur par catégorie
-    List<Depense> findByUtilisateurAndCategorie(Utilisateur utilisateur, String categorie);
-
     // Calcule le total des dépenses d'un utilisateur
     @Query("SELECT SUM(d.montant) FROM Depense d WHERE d.utilisateur = :utilisateur")
     BigDecimal getTotalDepensesByUtilisateur(@Param("utilisateur") Utilisateur utilisateur);
@@ -39,8 +36,8 @@ public interface DepenseRepository extends JpaRepository<Depense, Long> {
     );
 
     // Récupère les dépenses par catégorie pour un utilisateur
-    @Query("SELECT d.categorie, SUM(d.montant) FROM Depense d WHERE d.utilisateur = :utilisateur GROUP BY d.categorie")
-    List<Object[]> getDepensesParCategorie(@Param("utilisateur") Utilisateur utilisateur);
+    @Query("SELECT d.id, SUM(d.montant) FROM Depense d WHERE d.utilisateur = :utilisateur GROUP BY d.id")
+    List<Object[]> getDepensesParId(@Param("utilisateur") Utilisateur utilisateur);
 
     // Compte le nombre de dépenses pour un utilisateur
     @Query("SELECT COUNT(d) FROM Depense d WHERE d.utilisateur = :utilisateur")

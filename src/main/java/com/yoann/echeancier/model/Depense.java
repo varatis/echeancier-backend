@@ -22,9 +22,6 @@ public class Depense {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal montant;
 
-    @Column(nullable = false, length = 50)
-    private String categorie;
-
     @Column(name = "date_depense", nullable = false)
     private LocalDate dateDepense;
 
@@ -41,10 +38,9 @@ public class Depense {
     // Constructeurs
     public Depense() {}
 
-    public Depense(String description, BigDecimal montant, String categorie, LocalDate dateDepense, Utilisateur utilisateur) {
+    public Depense(String description, BigDecimal montant, LocalDate dateDepense, Utilisateur utilisateur) {
         this.description = description;
         this.montant = montant;
-        this.categorie = categorie;
         this.dateDepense = dateDepense;
         this.utilisateur = utilisateur;
         this.dateCreation = LocalDateTime.now();
@@ -59,9 +55,6 @@ public class Depense {
 
     public BigDecimal getMontant() { return montant; }
     public void setMontant(BigDecimal montant) { this.montant = montant; }
-
-    public String getCategorie() { return categorie; }
-    public void setCategorie(String categorie) { this.categorie = categorie; }
 
     public LocalDate getDateDepense() { return dateDepense; }
     public void setDateDepense(LocalDate dateDepense) { this.dateDepense = dateDepense; }

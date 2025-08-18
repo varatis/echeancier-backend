@@ -16,8 +16,6 @@ public class CreerDepenseDto {
     @DecimalMin(value = "0.01", message = "Le montant doit être supérieur à 0")
     private BigDecimal montant;
 
-    @NotBlank(message = "La catégorie est obligatoire")
-    private String categorie;
 
     @NotNull(message = "La date de dépense est obligatoire")
     private LocalDate dateDepense;
@@ -30,7 +28,6 @@ public class CreerDepenseDto {
     public CreerDepenseDto(String description, BigDecimal montant, String categorie, LocalDate dateDepense) {
         this.description = description;
         this.montant = montant;
-        this.categorie = categorie;
         this.dateDepense = dateDepense;
     }
 
@@ -40,9 +37,6 @@ public class CreerDepenseDto {
 
     public BigDecimal getMontant() { return montant; }
     public void setMontant(BigDecimal montant) { this.montant = montant; }
-
-    public String getCategorie() { return categorie; }
-    public void setCategorie(String categorie) { this.categorie = categorie; }
 
     public LocalDate getDateDepense() { return dateDepense; }
     public void setDateDepense(LocalDate dateDepense) { this.dateDepense = dateDepense; }

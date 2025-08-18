@@ -41,10 +41,6 @@ public class DepenseService {
         depense.setDescription(creerDepenseDto.getDescription());
         depense.setMontant(creerDepenseDto.getMontant());
         depense.setDateDepense(creerDepenseDto.getDateDepense() != null ? creerDepenseDto.getDateDepense() : LocalDate.now());
-
-        // ⭐ AJOUT MANQUANT : définir la catégorie
-        depense.setCategorie(creerDepenseDto.getCategorie());
-
         depense.setUtilisateur(utilisateur);
 
         return depenseRepository.save(depense);
@@ -94,7 +90,7 @@ public class DepenseService {
             depenseMoyenne = totalDepenses.divide(BigDecimal.valueOf(nombreDepenses), 2, RoundingMode.HALF_UP);
         }
 
-        List<Object[]> depensesParCategorieRaw = depenseRepository.getDepensesParCategorie(utilisateur);
+        List<Object[]> depensesParCategorieRaw = depenseRepository.getDepensesParId(utilisateur);
         Map<String, BigDecimal> depensesParCategorie = new HashMap<>();
 
         for (Object[] row : depensesParCategorieRaw) {
@@ -114,7 +110,6 @@ public class DepenseService {
         dto.setId(depense.getId());
         dto.setDescription(depense.getDescription());
         dto.setMontant(depense.getMontant());
-        dto.setCategorie(depense.getCategorie());
         dto.setDateDepense(depense.getDateDepense());
         dto.setCommentaires(depense.getCommentaires());
         dto.setDateCreation(depense.getDateCreation());
