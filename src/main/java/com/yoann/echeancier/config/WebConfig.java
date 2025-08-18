@@ -52,7 +52,8 @@ public class WebConfig implements WebMvcConfigurer{
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/auth/**", "/api/connexion", "/api/register").permitAll()
+                        // Autorise les requêtes POST vers les endpoints d'authentification
+                        .requestMatchers(HttpMethod.POST, "/api/auth/**", "/api/connexion", "/api/register").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
