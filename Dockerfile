@@ -1,14 +1,14 @@
-# Utilise une image de base OpenJDK pour Java 17
-FROM openjdk:17-jdk-slim
-
-# Définit le répertoire de travail dans le conteneur
+# ETAPE 1: Build de l'application Java avec Maven
+FROM maven:3.8.5-openjdk-17 AS build
 WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Copie le fichier JAR de l'application (le résultat de votre build Maven)
-COPY target/*.jar echeancier-0.0.1-SNAPSHOT.jar
+# ETAPE 2: Création de l'image finale pour l'exécution
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY --from=build /app/target/*.jar echeancier-0.0.1-SNAPSHOT.jar
 
-# Expose le port par défaut de Spring Boot
 EXPOSE 8080
-
-# Lance l'application
 ENTRYPOINT ["java", "-jar", "echeancier-0.0.1-SNAPSHOT.jar"]
