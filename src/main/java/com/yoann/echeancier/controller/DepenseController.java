@@ -85,12 +85,11 @@ public class DepenseController {
         }
     }
 
-    @DeleteMapping("/{depenseId}/utilisateur/{utilisateurId}")
+    @DeleteMapping("/{depenseId}")
     public ResponseEntity<?> supprimerDepense(
-            @PathVariable Long depenseId,
-            @PathVariable Long utilisateurId) {
+            @PathVariable Long depenseId) {
         try {
-            depenseService.supprimerDepense(depenseId, utilisateurId);
+            depenseService.supprimerDepense(depenseId);
             return ResponseEntity.ok(Map.of("message", "Dépense supprimée avec succès"));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest()

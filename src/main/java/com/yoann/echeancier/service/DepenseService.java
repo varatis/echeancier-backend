@@ -73,13 +73,9 @@ public class DepenseService {
         return depenseRepository.save(depense);
     }
 
-    public void supprimerDepense(Long depenseId, Long utilisateurId) {
+    public void supprimerDepense(Long depenseId) {
         Depense depense = depenseRepository.findById(depenseId)
                 .orElseThrow(() -> new RuntimeException("Dépense non trouvée"));
-
-        if (!depense.getUtilisateur().getId().equals(utilisateurId)) {
-            throw new RuntimeException("Vous n'êtes pas autorisé à supprimer cette dépense");
-        }
 
         depenseRepository.delete(depense);
     }
