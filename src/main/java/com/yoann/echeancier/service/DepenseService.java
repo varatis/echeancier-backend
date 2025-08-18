@@ -27,6 +27,13 @@ public class DepenseService {
     @Autowired
     private UtilisateurService utilisateurService;
 
+
+    public List<DepenseDto> obtenirToutesLesDepenses() {
+        return depenseRepository.findAll().stream()
+                .map(this::convertirEnDto)
+                .collect(Collectors.toList());
+    }
+
     public Depense creerDepense(CreerDepenseDto creerDepenseDto, Long utilisateurId) {
         Utilisateur utilisateur = utilisateurService.obtenirUtilisateurParId(utilisateurId);
 

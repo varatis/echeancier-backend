@@ -22,6 +22,21 @@ public class DepenseController {
     @Autowired
     private DepenseService depenseService;
 
+    @GetMapping
+    public ResponseEntity<?> obtenirToutesLesDepenses() {
+        try {
+            List<DepenseDto> depenses = depenseService.obtenirToutesLesDepenses();
+            return ResponseEntity.ok(depenses);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("erreur", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("erreur", "Erreur lors de la récupération de toutes les dépenses"));
+        }
+    }
+
+
     @PostMapping("/utilisateur/{utilisateurId}")
     public ResponseEntity<?> creerDepense(
             @PathVariable Long utilisateurId,
