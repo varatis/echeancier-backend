@@ -21,7 +21,6 @@ public class WebConfig implements WebMvcConfigurer{
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    // Rétablissez le constructeur pour l'injection du filtre
     public WebConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
@@ -29,7 +28,7 @@ public class WebConfig implements WebMvcConfigurer{
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
-                .allowedOrigins("http://localhost:3000", "http://localhost:8080", "http://localhost:4200", "http://localhost:5173", "http://localhost:5174", "https://echeancier-ejsi.vercel.app/")
+                .allowedOrigins("http://localhost:3000", "http://localhost:8080", "http://localhost:4200", "http://localhost:5173", "http://localhost:5174", "https://echeancier-ejsi.vercel.app")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true)
@@ -50,10 +49,20 @@ public class WebConfig implements WebMvcConfigurer{
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(request -> {
+                    var corsConfiguration = new org.springframework.web.cors.CorsConfiguration();
+                    corsConfiguration.setAllowedOriginPatterns(java.util.List.of("*"));
+                    corsConfiguration.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                    corsConfiguration.setAllowedHeaders(java.util.List.of("*"));
+                    corsConfiguration.setAllowCredentials(true);
+                    return corsConfiguration;
+                }))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        // Autorise les requêtes POST vers les endpoints d'authentification
-                        .requestMatchers(HttpMethod.POST, "/api/auth/**", "/api/connexion", "/api/register").permitAll()
+                        // Endpoints publics d'authentification - ordre spécifique important
+                        .requestMatchers("/api/connexion", "/api/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Pour les requêtes preflight CORS
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
