@@ -51,7 +51,7 @@ public class WebConfig implements WebMvcConfigurer{
                 .csrf(csrf -> csrf.disable()) // Désactive la protection CSRF
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Rend la session sans état
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/utilisateurs/inscription", "/api/utilisateurs/connexion").permitAll() // Autorise l'accès à l'inscription et la connexion
+                        .requestMatchers("/api/utilisateurs/**", "/api/depenses/**").permitAll() // Autorise l'accès à l'inscription et la connexion
                         .anyRequest().authenticated() // Toutes les autres requêtes nécessitent une authentification
                 );
         // Ajoutez votre filtre JWT avant le filtre d'authentification par mot de passe et nom d'utilisateur.
