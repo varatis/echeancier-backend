@@ -33,51 +33,35 @@ public class DepenseService {
         Depense depense = new Depense();
         depense.setDescription(creerDepenseDto.getDescription());
         depense.setMontant(creerDepenseDto.getMontant());
+        depense.setDateDepense(creerDepenseDto.getDateDepense() != null ? creerDepenseDto.getDateDepense() : LocalDate.now());
+
+        // ⭐ AJOUT MANQUANT : définir la catégorie
         depense.setCategorie(creerDepenseDto.getCategorie());
-        depense.setDateDepense(creerDepenseDto.getDateDepense());
-        depense.setCommentaires(creerDepenseDto.getCommentaires());
+
         depense.setUtilisateur(utilisateur);
-        depense.setDateCreation(LocalDateTime.now());
 
         return depenseRepository.save(depense);
     }
 
-    public List<Depense> obtenirDepensesUtilisateur(Long utilisateurId) {
+    public List<DepenseDto> obtenirDepensesParUtilisateur(Long utilisateurId) {
         Utilisateur utilisateur = utilisateurService.obtenirUtilisateurParId(utilisateurId);
-        return depenseRepository.findByUtilisateurOrderByDateDepenseDesc(utilisateur);
-    }
-
-    public List<DepenseDto> obtenirDepensesDtoUtilisateur(Long utilisateurId) {
-        List<Depense> depenses = obtenirDepensesUtilisateur(utilisateurId);
+        List<Depense> depenses = depenseRepository.findByUtilisateurOrderByDateDepenseDesc(utilisateur);
         return depenses.stream()
                 .map(this::convertirEnDto)
                 .collect(Collectors.toList());
     }
 
-    public List<Depense> obtenirDepensesParPeriode(Long utilisateurId, LocalDate dateDebut, LocalDate dateFin) {
-        Utilisateur utilisateur = utilisateurService.obtenirUtilisateurParId(utilisateurId);
-        return depenseRepository.findByUtilisateurAndDateDepenseBetween(utilisateur, dateDebut, dateFin);
-    }
-
-    public List<Depense> obtenirDepensesParCategorie(Long utilisateurId, String categorie) {
-        Utilisateur utilisateur = utilisateurService.obtenirUtilisateurParId(utilisateurId);
-        return depenseRepository.findByUtilisateurAndCategorie(utilisateur, categorie);
-    }
-
-    public Depense modifierDepense(Long depenseId, DepenseDto depenseDto, Long utilisateurId) {
+    public Depense modifierDepense(Long depenseId, CreerDepenseDto modifierDepenseDto, Long utilisateurId) {
         Depense depense = depenseRepository.findById(depenseId)
                 .orElseThrow(() -> new RuntimeException("Dépense non trouvée"));
 
-        // Vérifier que la dépense appartient à l'utilisateur
         if (!depense.getUtilisateur().getId().equals(utilisateurId)) {
-            throw new RuntimeException("Accès non autorisé à cette dépense");
+            throw new RuntimeException("Vous n'êtes pas autorisé à modifier cette dépense");
         }
 
-        depense.setDescription(depenseDto.getDescription());
-        depense.setMontant(depenseDto.getMontant());
-        depense.setCategorie(depenseDto.getCategorie());
-        depense.setDateDepense(depenseDto.getDateDepense());
-        depense.setCommentaires(depenseDto.getCommentaires());
+        depense.setDescription(modifierDepenseDto.getDescription());
+        depense.setMontant(modifierDepenseDto.getMontant());
+        depense.setDateDepense(modifierDepenseDto.getDateDepense() != null ? modifierDepenseDto.getDateDepense() : depense.getDateDepense());
 
         return depenseRepository.save(depense);
     }
@@ -86,9 +70,8 @@ public class DepenseService {
         Depense depense = depenseRepository.findById(depenseId)
                 .orElseThrow(() -> new RuntimeException("Dépense non trouvée"));
 
-        // Vérifier que la dépense appartient à l'utilisateur
         if (!depense.getUtilisateur().getId().equals(utilisateurId)) {
-            throw new RuntimeException("Accès non autorisé à cette dépense");
+            throw new RuntimeException("Vous n'êtes pas autorisé à supprimer cette dépense");
         }
 
         depenseRepository.delete(depense);
@@ -130,8 +113,6 @@ public class DepenseService {
         dto.setMontant(depense.getMontant());
         dto.setCategorie(depense.getCategorie());
         dto.setDateDepense(depense.getDateDepense());
-        dto.setCommentaires(depense.getCommentaires());
-        dto.setUtilisateurId(depense.getUtilisateur().getId());
         return dto;
     }
 }

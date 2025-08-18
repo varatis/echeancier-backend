@@ -1,8 +1,5 @@
 package com.yoann.echeancier.config;
 
-import com.yoann.echeancier.service.CustomUserDetailsService;
-import jakarta.servlet.DispatcherType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -14,8 +11,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -52,17 +47,14 @@ public class WebConfig implements WebMvcConfigurer{
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable()
+        http
+                .csrf(csrf -> csrf.disable()) // Désactive la protection CSRF
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/api/utilisateurs/inscription", "/api/utilisateurs/connexion").permitAll()
-                        // ... le reste de vos requestMatchers
+                        .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/auth/**").permitAll()
+                        .requestMatchers("/api/**").permitAll() // Autorise toutes les requêtes vers votre API
                         .anyRequest().authenticated()
                 );
-
-        // Utilisez le filtre déjà injecté par le constructeur
-        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
     }
 }

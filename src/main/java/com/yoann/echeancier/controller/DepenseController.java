@@ -16,7 +16,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/depenses")
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8080", "http://localhost:4200"}, allowCredentials = "true")
 public class DepenseController {
 
     @Autowired
@@ -40,9 +40,9 @@ public class DepenseController {
     }
 
     @GetMapping("/utilisateur/{utilisateurId}")
-    public ResponseEntity<?> obtenirDepensesUtilisateur(@PathVariable Long utilisateurId) {
+    public ResponseEntity<?> obtenirDepensesParUtilisateur(@PathVariable Long utilisateurId) {
         try {
-            List<DepenseDto> depenses = depenseService.obtenirDepensesDtoUtilisateur(utilisateurId);
+            List<DepenseDto> depenses = depenseService.obtenirDepensesParUtilisateur(utilisateurId);
             return ResponseEntity.ok(depenses);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest()
@@ -53,46 +53,13 @@ public class DepenseController {
         }
     }
 
-    @GetMapping("/utilisateur/{utilisateurId}/periode")
-    public ResponseEntity<?> obtenirDepensesParPeriode(
-            @PathVariable Long utilisateurId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateDebut,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFin) {
-        try {
-            List<Depense> depenses = depenseService.obtenirDepensesParPeriode(utilisateurId, dateDebut, dateFin);
-            return ResponseEntity.ok(depenses);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("erreur", e.getMessage()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("erreur", "Erreur lors de la récupération des dépenses par période"));
-        }
-    }
-
-    @GetMapping("/utilisateur/{utilisateurId}/categorie/{categorie}")
-    public ResponseEntity<?> obtenirDepensesParCategorie(
-            @PathVariable Long utilisateurId,
-            @PathVariable String categorie) {
-        try {
-            List<Depense> depenses = depenseService.obtenirDepensesParCategorie(utilisateurId, categorie);
-            return ResponseEntity.ok(depenses);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("erreur", e.getMessage()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("erreur", "Erreur lors de la récupération des dépenses par catégorie"));
-        }
-    }
-
     @PutMapping("/{depenseId}/utilisateur/{utilisateurId}")
     public ResponseEntity<?> modifierDepense(
             @PathVariable Long depenseId,
             @PathVariable Long utilisateurId,
-            @Valid @RequestBody DepenseDto depenseDto) {
+            @Valid @RequestBody CreerDepenseDto modifierDepenseDto) {
         try {
-            Depense depenseModifiee = depenseService.modifierDepense(depenseId, depenseDto, utilisateurId);
+            Depense depenseModifiee = depenseService.modifierDepense(depenseId, modifierDepenseDto, utilisateurId);
             return ResponseEntity.ok(Map.of("message", "Dépense modifiée avec succès", "depense", depenseModifiee));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest()
